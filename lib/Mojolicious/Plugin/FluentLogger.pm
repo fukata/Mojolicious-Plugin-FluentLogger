@@ -4,6 +4,10 @@ use 5.006;
 use strict;
 use warnings;
 
+use Mojo::Base 'Mojolicious::Plugin';
+use Carp;
+use Fluent::Logger;
+
 =head1 NAME
 
 Mojolicious::Plugin::FluentLogger - The great new Mojolicious::Plugin::FluentLogger!
@@ -23,30 +27,20 @@ Quick summary of what the module does.
 
 Perhaps a little code snippet.
 
-    use Mojolicious::Plugin::FluentLogger;
-
-    my $foo = Mojolicious::Plugin::FluentLogger->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+    $self->plugin( FluentLogger => ( host => '127.0.0.1', port => 24224 ) );
+    $self->app->fluent->post("access", { "agent" => "foo" });
 
 =head1 SUBROUTINES/METHODS
 
-=head2 function1
+=head2 register 
 
 =cut
 
-sub function1 {
-}
+sub register {
+    my ($self, $app, %conf) = @_;
+    %conf ||= ();
 
-=head2 function2
-
-=cut
-
-sub function2 {
+    $app->attr( fluent => sub { Fluent::Logger->new(%conf) } );
 }
 
 =head1 AUTHOR
