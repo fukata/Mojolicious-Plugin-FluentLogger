@@ -38,8 +38,6 @@ Perhaps a little code snippet.
 
 sub register {
     my ($self, $app, %conf) = @_;
-    %conf ||= ();
-
     $app->attr( fluent => sub { Fluent::Logger->new(%conf) } );
 }
 
